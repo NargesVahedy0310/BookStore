@@ -2,6 +2,7 @@ from django.db import models
 
 class Book(models.Model):
     title = models.CharField(max_length=255)
+    description = models.TextField()
     authors = models.ManyToManyField('Author')
     genre = models.ForeignKey('Genre', on_delete=models.SET_NULL, null=True)
     publication_date = models.DateField()

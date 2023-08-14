@@ -1,9 +1,12 @@
-from rest_framework import routers, viewsets
+from rest_framework import generics, viewsets
 from .models import Book
 from .serializers import BookSerializer
 
-# تعریف مدل‌ویو‌ست
-class BookViewSet(viewsets.ModelViewSet):
+class BookListView(generics.CreateAPIView,
+                   generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
+class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
