@@ -73,12 +73,18 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# settings.py
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'Book_Store',
+        'USER': 'narges',
+        'PASSWORD': 'narges',
+        'HOST': 'localhost',
+        'PORT': '5432', }
 }
+
 
 
 # Password validation
