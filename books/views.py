@@ -1,3 +1,9 @@
-from django.shortcuts import render
+from rest_framework import routers, viewsets
+from .models import Book
+from .serializers import BookSerializer
 
-# Create your views here.
+# تعریف مدل‌ویو‌ست
+class BookViewSet(viewsets.ModelViewSet):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+
