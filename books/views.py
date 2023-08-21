@@ -1,18 +1,27 @@
 from rest_framework import generics, viewsets
 from .models import Book
-from .serializers import *
+from .serializers import BookSerializer
 from django_elasticsearch_dsl.search import Search
-from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
+from django.db.models import Q
+from rest_framework.pagination import PageNumberPagination
+
+class CustomPageNumberPagination(PageNumberPagination):
+    page_size = 20  # تعداد آیتم‌های هر صفحه
+    page_query_param = 'page'  # نام پارامتر مربوط به شماره صفحه در URL
+    page_size_query_param = 'page_size'  # نام پارامتر مربوط به تعداد آیتم‌های هر صفحه در URL
+    max_page_size = 1000  # تعداد آیتم‌های حداکثر هر صفحه
+
 
 class BookListView(viewsets.ModelViewSet):
     serializer_class = BookSerializer
+    pagination_class = CustomPageNumberPagination
     
     def get_queryset(self):
-        min_price = self.request.GET.get('min_price')
-        max_price = self.request.GET.get('max_price')
+        price_range = self.request.GET.get('price_range')
         query = self.request.GET.get('query')
+        ordering = self.request.GET.get('ordering')
 
         queryset = Book.objects.all()
 
@@ -24,18 +33,17 @@ class BookListView(viewsets.ModelViewSet):
             book_ids = [hit.meta.id for hit in response]
             queryset = queryset.filter(id__in=book_ids)
         
-        if min_price is not None:
-            try:
-                min_price = float(min_price)  # تبدیل به عدد اعشاری
-                queryset = queryset.filter(price__gte=min_price)
-            except ValueError:
-                return Response({'error': 'min_price باید یک مقدار عددی باشد.'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        if max_price is not None:
-            try:
-                max_price = float(max_price)  # تبدیل به عدد اعشاری
-                queryset = queryset.filter(price__lte=max_price)
-            except ValueError:
-                return Response({'error': 'max_price باید یک مقدار عددی باشد.'}, status=status.HTTP_400_BAD_REQUEST)
+        if price_range:
+            # تجزیه و تحلیل محدوده قیمت از رشته
+            min_price, max_price = map(int, price_range.split(','))
 
+            # فیلتر کردن بر اساس محدوده قیمت
+            queryset = queryset.filter(price__gte=min_price, price__lte=max_price)
+
+        # مرتب سازی نتایج بر اساس قیمت
+        if ordering == 'price':
+            queryset = queryset.order_by('price')
+        elif ordering == '-price':
+            queryset = queryset.order_by('-price')
+        #?price_range=100000,140000&ordering=price
         return queryset
