@@ -19,9 +19,12 @@ class BookListView(viewsets.ModelViewSet):
     pagination_class = CustomPageNumberPagination
     
     def get_queryset(self):
+        #مجموع درخواست ها 
         price_range = self.request.GET.get('price_range')
         query = self.request.GET.get('query')
         ordering = self.request.GET.get('ordering')
+        genre_id = self.request.GET.get('genre_id')
+        birth_city_id = self.request.GET.get('birth_city_id')
 
         queryset = Book.objects.all()
 
@@ -44,6 +47,12 @@ class BookListView(viewsets.ModelViewSet):
         if ordering == 'price':
             queryset = queryset.order_by('price')
         elif ordering == '-price':
-            queryset = queryset.order_by('-price')
-        #?price_range=100000,140000&ordering=price
+            queryset = queryset.order_by('-price')  #?price_range=100000,140000&ordering=price
+        # فیلتر کردن بر اساس ژانر
+        if genre_id:
+            queryset = queryset.filter(genre_id=genre_id)
+        #فیلتر کردن بر اساس محل تولد نویسنده
+        if birth_city_id:
+            queryset = queryset.filter(authors__birth_city_id=birth_city_id)
+        #URL GET==> /?price_range=100000,140000&genre_id=1&birth_city_id=2
         return queryset
