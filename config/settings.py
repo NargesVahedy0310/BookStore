@@ -28,7 +28,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'books',
     'django_elasticsearch_dsl',
-    
+    'accounts',
+    'jdatetime'
 ]
 
 
@@ -104,6 +105,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'fa-IR'
+
 
 TIME_ZONE = 'UTC'
 

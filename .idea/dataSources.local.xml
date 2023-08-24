@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="dataSourceStorageLocal" created-in="DB-232.8660.111">
+  <component name="dataSourceStorageLocal" created-in="DB-232.9559.28">
     <data-source name="Book_Store" uuid="474f7abe-5800-47f8-998d-81fe2e8bb4f8">
       <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="POSTGRES" exact-version="0" />
       <secret-storage>master_key</secret-storage>
@@ -8,7 +8,7 @@
       <schema-mapping />
     </data-source>
     <data-source name="dvdrental" uuid="2e135a97-4702-4a33-a8ad-6bf02a64b145">
-      <database-info product="PostgreSQL" version="14.8 (Ubuntu 14.8-0ubuntu0.22.10.1)" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.6.0" dbms="POSTGRES" exact-version="14.8" exact-driver-version="42.6">
+      <database-info product="PostgreSQL" version="14.9 (Ubuntu 14.9-1.pgdg22.10+1)" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.6.0" dbms="POSTGRES" exact-version="14.9" exact-driver-version="42.6">
         <identifier-quote-string>&quot;</identifier-quote-string>
       </database-info>
       <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
