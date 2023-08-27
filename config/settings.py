@@ -28,7 +28,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_elasticsearch_dsl',
     'rest_framework_simplejwt',
-    'rest_framework.authtoken',
+    # 'rest_framework.authtoken'
+
     'books',
     'user_accounts',
 
@@ -145,5 +146,9 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+
+
 }

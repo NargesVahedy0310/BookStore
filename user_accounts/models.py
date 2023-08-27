@@ -19,12 +19,16 @@ class User(AbstractUser):
     )
 
 class OtpRequestQuerySet(models.QuerySet):
-    def is_valid(self, receiver, request, password):
+    def is_valid(self, receiver, request, password, first_name, last_name, pass_one, pass_two):
         current_time = timezone.now()
         return self.filter(
             receiver=receiver,
             request_id=request,
             password=password,
+            first_name=first_name,
+            last_name=last_name,
+            pass_one=pass_one,
+            pass_two=pass_two,
             created__lt=current_time,
             created__gt=current_time-timedelta(seconds=120),
 
@@ -35,12 +39,14 @@ class OTPManager(models.Manager):
     def get_queryset(self):
         return OtpRequestQuerySet(self.model, self._db)
 
-    def is_valid(self, receiver, request, password):
-        return self.get_queryset().is_valid(receiver, request, password)
+    def is_valid(self, receiver, request, password, first_name, last_name, pass_one, pass_two):
+        return self.get_queryset().is_valid(receiver, request, password, first_name, last_name, pass_one, pass_two)
 
 
     def generate(self, data):
-        otp = self.model(channel=data['channel'], receiver=data['receiver'])
+        otp = self.model(channel=data['channel'], receiver=data['receiver'],
+                         first_name=data['first_name'], last_name=data['last_name'],
+                         pass_one=data['pass_one'], pass_two=data['pass_two'])
         otp.save(using=self._db)
         send_otp(otp)
         return otp
@@ -62,5 +68,9 @@ class OTPRequest(models.Model):
     receiver = models.CharField(max_length=50)
     password = models.CharField(max_length=4, default=generate_otp)
     created = models.DateTimeField(auto_now_add=True, editable=False)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    pass_one = models.CharField(max_length=15)
+    pass_two = models.CharField(max_length=15)
 
     objects = OTPManager()
