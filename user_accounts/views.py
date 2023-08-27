@@ -7,6 +7,8 @@ from django.contrib.auth import get_user_model
 from .models import OTPRequest
 from .serializers import VerifyOtpRequestSerializer
 from rest_framework.permissions import AllowAny
+from rest_framework.authtoken.models import Token
+
 
 
 class OTPVerificationView(APIView):
@@ -66,5 +68,7 @@ class OTPVerificationView(APIView):
             user.set_password(otp['pass_one'])
             user.save()
 
-        refresh = RefreshToken.for_user(user)
-        return user, str(refresh.access_token)
+        # ایجاد یک توکن جدید برای کاربر
+        token, created = Token.objects.get_or_create(user=user)
+
+        return user, str(token)

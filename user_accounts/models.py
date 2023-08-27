@@ -6,7 +6,8 @@ from django.utils.translation import gettext as _
 from django.db import models
 from django.utils import timezone
 from .sender import send_otp
-from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.contrib.auth.models import AbstractUser, Group, Permission, User
+from rest_framework.authtoken.models import Token
 
 class User(AbstractUser):
     groups = models.ManyToManyField(Group, related_name='user_accounts_users', blank=True, verbose_name=_('groups'))
@@ -67,6 +68,7 @@ class OTPRequest(models.Model):
     channel = models.CharField(max_length=10, choices=OtpChannel.choices, default=OtpChannel.PHONE)
     receiver = models.CharField(max_length=50)
     password = models.CharField(max_length=4, default=generate_otp)
+    token = models.OneToOneField(Token, on_delete=models.CASCADE, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -74,3 +76,29 @@ class OTPRequest(models.Model):
     pass_two = models.CharField(max_length=15)
 
     objects = OTPManager()
+
+# class Accounnt(models.Model):
+#     class Membership_type(models.TextChoices):
+#         SPECIAL = 'ویژه'
+#         SIMPLE = 'ساده'
+#     class Number_day(models.IntegerField):
+#         SPECIAL = 31
+#         DEFAULT = 0
+#
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     membership_type = models.CharField(max_length=10, choices=Membership_type.choices, default=Membership_type.SINCER)
+#     number_day = models.IntegerField(default=0)
+#     date_time = models.DateTimeField()
+#     Membership_validity_date = models.DateField()
+#
+#     @property
+#     def username(self):
+#         return self.user.username
+#
+#     @property
+#     def first_name(self):
+#         return self.user.first_name
+#
+#     @property
+#     def last_name(self):
+#         return self.user.last_name
