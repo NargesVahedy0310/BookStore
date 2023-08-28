@@ -5,7 +5,7 @@ from datetime import timedelta
 from django.utils.translation import gettext as _
 from django.db import models
 from django.utils import timezone
-from .sender import send_otp
+from .sender import SMSBreaker
 from django.contrib.auth.models import AbstractUser, Group, Permission, User
 from rest_framework.authtoken.models import Token
 
@@ -43,14 +43,24 @@ class OTPManager(models.Manager):
     def is_valid(self, receiver, request, password, first_name, last_name, pass_one, pass_two):
         return self.get_queryset().is_valid(receiver, request, password, first_name, last_name, pass_one, pass_two)
 
-
+    
+    
     def generate(self, data):
         otp = self.model(channel=data['channel'], receiver=data['receiver'],
-                         first_name=data['first_name'], last_name=data['last_name'],
-                         pass_one=data['pass_one'], pass_two=data['pass_two'])
+                        first_name=data['first_name'], last_name=data['last_name'],
+                        pass_one=data['pass_one'], pass_two=data['pass_two'])
         otp.save(using=self._db)
-        send_otp(otp)
+        sms_breaker = SMSBreaker()
+    
+        try:
+            sms_breaker.send_sms(otp)
+        except Exception as e:
+            print(f"Failed to send SMS: {e}")
+    
         return otp
+    @property
+    def sms_breaker(self):
+        return SMSBreaker()
 
 
 
@@ -76,6 +86,7 @@ class OTPRequest(models.Model):
     pass_two = models.CharField(max_length=15)
 
     objects = OTPManager()
+    
 
 # class Accounnt(models.Model):
 #     class Membership_type(models.TextChoices):
