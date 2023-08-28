@@ -8,11 +8,13 @@ from .models import OTPRequest
 from .serializers import VerifyOtpRequestSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework.authtoken.models import Token
+from rest_framework.throttling import UserRateThrottle
 
 
 
 class OTPVerificationView(APIView):
     permission_classes = [AllowAny]
+    throttle_classes = [UserRateThrottle]
 
     def get(self, request):
         serializer = serializers.RequestOTPSerializer(data=request.query_params)
