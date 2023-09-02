@@ -4,12 +4,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
-from .models import OTPRequest
+from .models import OTPRequest, Accounnt
 from .serializers import VerifyOtpRequestSerializer
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authtoken.models import Token
 from rest_framework.throttling import UserRateThrottle
-
+from rest_framework.viewsets import ModelViewSet
+from rest_framework import generics
 
 
 class OTPVerificationView(APIView):
@@ -74,3 +75,21 @@ class OTPVerificationView(APIView):
         token, created = Token.objects.get_or_create(user=user)
 
         return user, str(token)
+
+class UserProfileView(APIView):
+    permission_classes = [IsAuthenticated]  
+    def get(self, request):
+        user_profile = {
+            "username": request.user.username,
+            "first_name": request.user.first_name,
+            "last_name": request.user.last_name,
+        }
+
+        return Response(user_profile, status=status.HTTP_200_OK)
+
+# class UserProfileView(generics.RetrieveAPIView):
+#     serializer_class = AccountSerializers
+#     permission_classes = [IsAuthenticated]
+
+#     def get_object(self):
+#         return self.request.user

@@ -51,7 +51,7 @@ class OTPManager(models.Manager):
                         pass_one=data['pass_one'], pass_two=data['pass_two'])
         otp.save(using=self._db)
         sms_breaker = SMSBreaker()
-    
+
         try:
             sms_breaker.send_sms(otp)
         except Exception as e:
@@ -69,6 +69,12 @@ def generate_otp():
     digits = rand.choices(string.digits, k=4)
     return ''.join(digits)
 
+class sms_breaker_status(models.Model):
+    class status_sms(models.TextChoices):
+        KAVENEGAR = "Kavenegar"
+        SIGNAL = "Signal"
+
+    title_service = models.CharField(max_length=25, choices=status_sms.choices, default=status_sms.KAVENEGAR)
 
 class OTPRequest(models.Model):
     class OtpChannel(models.TextChoices):
@@ -88,28 +94,29 @@ class OTPRequest(models.Model):
     objects = OTPManager()
     
 
-# class Accounnt(models.Model):
-#     class Membership_type(models.TextChoices):
-#         SPECIAL = 'ویژه'
-#         SIMPLE = 'ساده'
-#     class Number_day(models.IntegerField):
-#         SPECIAL = 31
-#         DEFAULT = 0
-#
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     membership_type = models.CharField(max_length=10, choices=Membership_type.choices, default=Membership_type.SINCER)
-#     number_day = models.IntegerField(default=0)
-#     date_time = models.DateTimeField()
-#     Membership_validity_date = models.DateField()
-#
-#     @property
-#     def username(self):
-#         return self.user.username
-#
-#     @property
-#     def first_name(self):
-#         return self.user.first_name
-#
-#     @property
-#     def last_name(self):
-#         return self.user.last_name
+class Accounnt(models.Model):
+    class Membership_type(models.TextChoices):
+        SPECIAL = 'ویژه'
+        SIMPLE = 'ساده'
+
+    class Number_day(models.IntegerChoices):
+        SPECIAL = 31
+        DEFAULT = 0
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    membership_type = models.CharField(max_length=10, choices=Membership_type.choices, default=Membership_type.SIMPLE)
+    number_day = models.IntegerField(choices=Number_day.choices, default=Number_day.DEFAULT)
+    date_time = models.DateTimeField()
+    Membership_validity_date = models.DateField()
+
+    @property
+    def username(self):
+        return self.user.username
+
+    @property
+    def first_name(self):
+        return self.user.first_name
+
+    @property
+    def last_name(self):
+        return self.user.last_name

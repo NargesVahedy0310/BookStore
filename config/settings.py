@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'django_elasticsearch_dsl',
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
+    'django_redis',
 
     'books',
     'user_accounts',
@@ -150,3 +151,19 @@ REST_FRAMEWORK = {
     'otp_verify': '10/hour',
 },
 }
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",  
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+
+CACHE_TTL = 60 * 20 
+CACHES["default"]["TIMEOUT"] = CACHE_TTL
+
+

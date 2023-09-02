@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import OTPRequest
+from .models import OTPRequest, Accounnt
 
 
 class RequestOTPSerializer(serializers.Serializer):
@@ -29,3 +29,9 @@ class ObtainTokenSerializer(serializers.Serializer):
     access_token = serializers.CharField(max_length=40, allow_null=False, source='key')
     refresh = serializers.CharField(max_length=128, allow_null=False)
     created = serializers.BooleanField()
+
+# class AccountSerializers(serializers.Serializer):
+#     class Meta:
+#         model = Accounnt
+#         fields = '__all__'
+#         # depth = 1

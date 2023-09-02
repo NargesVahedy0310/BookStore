@@ -2,6 +2,7 @@ Package                       Version
 ----------------------------- ---------
 asgiref                       3.7.2
 asttokens                     2.2.1
+async-timeout                 4.0.3
 backcall                      0.2.0
 certifi                       2023.7.22
 circuitbreaker                2.0.0
@@ -10,6 +11,7 @@ Django                        4.2.4
 django-elasticsearch-dsl      7.3
 django-haystack               3.2.1
 django-ratelimit              4.1.0
+django-redis                  5.3.0
 djangorestframework           3.14.0
 djangorestframework-oauth     1.1.0
 djangorestframework-simplejwt 5.3.0
@@ -34,6 +36,7 @@ Pygments                      2.16.1
 PyJWT                         2.8.0
 python-dateutil               2.8.2
 pytz                          2023.3
+redis                         5.0.0
 setuptools                    68.0.0
 six                           1.16.0
 sqlparse                      0.4.4
