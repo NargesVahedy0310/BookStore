@@ -5,7 +5,7 @@ from datetime import timedelta
 from django.utils.translation import gettext as _
 from django.db import models
 from django.utils import timezone
-from .sender import SMSBreaker
+from .sender import sms_breaker
 from django.contrib.auth.models import AbstractUser, Group, Permission, User
 from rest_framework.authtoken.models import Token
 
@@ -50,17 +50,15 @@ class OTPManager(models.Manager):
                         first_name=data['first_name'], last_name=data['last_name'],
                         pass_one=data['pass_one'], pass_two=data['pass_two'])
         otp.save(using=self._db)
-        sms_breaker = SMSBreaker()
-
         try:
-            sms_breaker.send_sms(otp)
+            sms_breaker.send_sms(otp.password)
         except Exception as e:
             print(f"Failed to send SMS: {e}")
     
         return otp
     @property
     def sms_breaker(self):
-        return SMSBreaker()
+        return sms_breaker
 
 
 
@@ -68,13 +66,6 @@ def generate_otp():
     rand = random.SystemRandom()
     digits = rand.choices(string.digits, k=4)
     return ''.join(digits)
-
-class sms_breaker_status(models.Model):
-    class status_sms(models.TextChoices):
-        KAVENEGAR = "Kavenegar"
-        SIGNAL = "Signal"
-
-    title_service = models.CharField(max_length=25, choices=status_sms.choices, default=status_sms.KAVENEGAR)
 
 class OTPRequest(models.Model):
     class OtpChannel(models.TextChoices):

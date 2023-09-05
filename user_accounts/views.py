@@ -76,16 +76,16 @@ class OTPVerificationView(APIView):
 
         return user, str(token)
 
-class UserProfileView(APIView):
-    permission_classes = [IsAuthenticated]  
-    def get(self, request):
-        user_profile = {
-            "username": request.user.username,
-            "first_name": request.user.first_name,
-            "last_name": request.user.last_name,
-        }
+# class UserProfileView(APIView):
+#     permission_classes = [IsAuthenticated]  
+#     def get(self, request):
+#         user_profile = {
+#             "username": request.user.username,
+#             "first_name": request.user.first_name,
+#             "last_name": request.user.last_name,
+#         }
 
-        return Response(user_profile, status=status.HTTP_200_OK)
+#         return Response(user_profile, status=status.HTTP_200_OK)
 
 # class UserProfileView(generics.RetrieveAPIView):
 #     serializer_class = AccountSerializers
